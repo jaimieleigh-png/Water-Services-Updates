@@ -1,0 +1,104 @@
+
+name: Water Services NewsTracker Automation
+
+on:
+  workflow_dispatch: # Allows manual runs
+  schedule:
+    - cron: '0 17 * * *' # Daily at 5 PM UTC
+
+jobs:
+  run-tracker:
+    runs-on: ubuntu-latest
+    env:
+      EMAIL_USER: ${{ secrets.EMAIL_USER }}
+      EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+      TO_EMAIL:   ${{ secrets.TO_EMAIL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install feedparser beautifulsoup4 requests
+
+      - name: Run Water Services NewsTracker script
+        run: |
+          python water_services_news_tracker.py
+
+       
+      - name: Send email alert
+        if: success()
+        run: |
+          python - <<'EOF'
+          import os, glob, csv, smtplib
+          from email.mime.text import MIMEText
+          
+
+          SMTP_SERVER = 'smtp.gmail.com'
+          SMTP_PORT = 587
+          EMAIL_USER = os.environ.get('EMAIL_USER')
+          EMAIL_PASS = os.environ.get('EMAIL_PASS')
+          TO_EMAIL   = os.environ.get('TO_EMAIL')
+
+          # Defensive check for missing env vars
+          missing = [k for k in ('EMAIL_USER','EMAIL_PASS','TO_EMAIL') if not os.environ.get(k)]
+          if missing:
+            raise RuntimeError(f"Missing required environment variables: {', '.join(missing)}")
+
+          files = sorted(glob.glob('NewsTracker/metadata-*.csv'))
+          metadata_file = files[-1] if files else None
+          body_lines = []
+
+          if metadata_file and os.path.exists(metadata_file):
+              with open(metadata_file, newline='', encoding='utf-8') as csvfile:
+                  reader = csv.DictReader(csvfile)
+                  rows = list(reader)
+                  if rows:
+                      body_lines.append(f"NewsTracker found {len(rows)} new items:\n")
+                      for i, row in enumerate(rows[:10], start=1):  # Limit to first 10 for brevity
+                          title = (row.get('title') or '').strip()
+                          link  = (row.get('link') or '').strip()
+                          body_lines.append(f"{i}. {title}\n{link}\n")
+
+                      if len(rows) > 10:
+                          body_lines.append(f"...and {len(rows) - 10} more.")
+                  else:
+                      body_lines.append("No new articles or PDFs found.")
+          else:
+              body_lines.append("Metadata file not found. No data processed.")
+
+          message = "\n".join(body_lines)
+          msg = MIMEText(message)
+          msg['Subject'] = 'Water Services NewsTracker Daily Report'
+          msg['From'] = EMAIL_USER
+          msg['To'] = TO_EMAIL
+
+          try:
+              server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+              server.starttls()
+              server.login(EMAIL_USER, EMAIL_PASS)
+              server.sendmail(EMAIL_USER, [TO_EMAIL], msg.as_string())
+              server.quit()
+              print("Email alert sent successfully.")
+          except Exception as e:
+              print(f"Failed to send email: {e}")
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Water Services NewsTracker-outputs
+          path: Water Services NewsTracker/**
+          
+      - name: Upload run.log
+        uses: actions/upload-artifact@v4
+        with:
+          name: Water Services NewsTracker-log
+          path: run.log
+
