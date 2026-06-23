@@ -51,7 +51,7 @@ jobs:
           if missing:
             raise RuntimeError(f"Missing required environment variables: {', '.join(missing)}")
 
-          files = sorted(glob.glob('NewsTracker/metadata-*.csv'))
+          files = sorted(glob.glob('WaterServicesNewsTracker/metadata-*.csv'))
           metadata_file = files[-1] if files else None
           body_lines = []
 
