@@ -20,7 +20,7 @@ MAX_AGE_DAYS = 2
 
 PRIMARY_KEYWORDS = [
     'water services','wastewater','stormwater','drinking water','water quality',
-    'three waters','water services reform','water infrastructure','water supply'
+    'three waters','water services reform','water infrastructure','water supply', 'sewage'
 ]
 
 SECONDARY_KEYWORDS = [
