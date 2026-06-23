@@ -127,6 +127,18 @@ def fetch_html():
                 title = re.split(r'\\b(By|\\|)\\b', raw_title)[0].strip()
 
                 link = urljoin(url, a.get('href'))
+                # Try to find a nearby date
+                published = None
+                time_tag = a.find_parent().find('time')
+                if time_tag and time_tag.has_attr('datetime'):
+                    try:
+                        published = datetime.fromisoformat(time_tag['datetime'].replace('Z', '+00:00'))
+                    except Exception:
+                        published = None
+
+               if not age_ok(published):
+                   continue
+
                 summary = ''
                 if not match_item(title, summary):
                     continue
