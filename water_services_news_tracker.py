@@ -136,8 +136,8 @@ def fetch_html():
                     except Exception:
                         published = None
 
-               if not age_ok(published):
-                   continue
+                if not age_ok(published):
+                    continue
 
                 summary = ''
                 if not match_item(title, summary):
