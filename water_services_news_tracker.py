@@ -122,7 +122,10 @@ def fetch_html():
             r.raise_for_status()
             soup = BeautifulSoup(r.text, 'html.parser')
             for a in soup.select('article h2 a, article h3 a, a[href]'):
-                title = a.get_text(strip=True)
+                raw_title = a.get_text(strip=True)
+                # Clean out common trailing elements (author, date, etc.)
+                title = re.split(r'\\b(By|\\|)\\b', raw_title)[0].strip()
+
                 link = urljoin(url, a.get('href'))
                 summary = ''
                 if not match_item(title, summary):
