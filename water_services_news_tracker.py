@@ -19,18 +19,20 @@ METADATA_FILE = os.path.join(BASE_DIR, f'metadata-{DATE_STAMP}.csv')
 MAX_AGE_DAYS = 2
 
 PRIMARY_KEYWORDS = [
-    'water services','wastewater','stormwater','drinking water','water quality',
-    'three waters','water services reform','water infrastructure','water supply', 'sewage'
+    'water','freshwater','water services','wastewater','stormwater','drinking water','water quality',
+    'three waters','water services reform','water infrastructure','water supply', 'sewage','water crisis',
+    'water upgrade','water project','water network', 'water scheme','water use','water demand','pipe','pipeline',
+    'water main','reservoir','treatment plant','taumata arowai','tiaki wai','watercare'
 ]
 
 SECONDARY_KEYWORDS = [
     'infrastructure funding','network failure','environmental limits','overflow','contamination','public health risk',
     'nitrates','heavy metals','climate change','leak','leakage','pipe burst','service disruption','biosolids','pipes',
-    'taumata arowai','water services authority','standards','discharge','drought','extreme rainfall','flood resilience','sea level rise'
+    'water services authority','standards','discharge','drought','extreme rainfall','flood resilience','sea level rise'
 ]
 
 EXCLUDE_KEYWORDS = [
-    'murder','homicide','stabbing','shooting','assault','police','body','death','court','trial','sentenced',
+    'murder','homicide','stabbing','shooting','assault','police','body','death','sentenced',
     'swimming','surf','beach','fishing','boating','kayak','travel','tourism','holiday','destination',
     'forecast','weather','rainfall','showers','thunderstorm','temperature',
     'hydro','hydroelectric','electricity','power generation'
@@ -72,10 +74,11 @@ def normalize(text):
     return text
 
 
-def match_item(title, summary):
+def match_item(title, summary, body=''):
     t = normalize(title)
     s = normalize(summary)
-    combined = t + ' ' + s
+    b = normalize(body)
+    combined = f"{t} {s} {b}"
 
     if any(p.search(combined) for p in EXCLUDE_PATTERNS):
         return False
@@ -83,7 +86,7 @@ def match_item(title, summary):
     primary = any(p.search(combined) for p in PRIMARY_PATTERNS)
     secondary = any(p.search(combined) for p in SECONDARY_PATTERNS)
 
-    return primary and (secondary or primary)
+    return primary
 
 
 def age_ok(published):
