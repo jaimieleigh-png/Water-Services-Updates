@@ -50,11 +50,6 @@ RSS_FEEDS = [
 
 HTML_SOURCES = [
     ('https://thespinoff.co.nz/science','The Spinoff'),
-    ('https://thespinoff.co.nz/tags/water','The Spinoff'),
-    ('https://www.taumataarowai.govt.nz/home/articles','Taumata Arowai'),
-    ('https://environment.govt.nz/news/','MfE'),
-    ('https://www.lgnz.co.nz/news/','LGNZ'),
-    ('https://www.teurukahika.govt.nz/news-and-publications','Te Uru Kahika'),
     ('https://www.stuff.co.nz/environment','Stuff Environment')
 ]
 
