@@ -33,9 +33,10 @@ SECONDARY_KEYWORDS = [
 
 EXCLUDE_KEYWORDS = [
     'murder','homicide','stabbing','shooting','assault','police','body','death','sentenced',
-    'swimming','surf','beach','fishing','boating','kayak','travel','tourism','holiday','destination',
+    'swimming','surf','beach','fishing','boating','kayak','travel','tourism','holiday','destination','cruise'
     'forecast','weather','rainfall','showers','thunderstorm','temperature',
-    'hydro','hydroelectric','electricity','power generation'
+    'hydro','hydroelectric','electricity','power generation',
+    'all blacks'
 ]
 
 RSS_FEEDS = [
