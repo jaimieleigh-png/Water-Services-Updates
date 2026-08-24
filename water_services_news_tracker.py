@@ -36,7 +36,7 @@ EXCLUDE_KEYWORDS = [
     'swimming','surf','beach','fishing','boating','kayak','travel','tourism','holiday','destination','cruise'
     'forecast','weather','rainfall','showers','thunderstorm','temperature',
     'hydro','hydroelectric','electricity','power generation',
-    'all blacks'
+    'all blacks','sport'
 ]
 
 RSS_FEEDS = [
