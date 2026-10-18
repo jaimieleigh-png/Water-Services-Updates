@@ -4,7 +4,7 @@ name: Water Services NewsTracker Automation
 on:
   workflow_dispatch: # Allows manual runs
   schedule:
-    - cron: '0 17 * * *' # Daily at 5 PM UTC
+    - cron: '0 16 * * *' # Daily at 5 PM UTC
 
 jobs:
   run-tracker:
